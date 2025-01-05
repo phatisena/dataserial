@@ -3,13 +3,14 @@
 //%color="#44d4ca"
 //%icon="\uf187"
 namespace dataserial {
+    
     let cidk: {[key:string]:number} = {}
 
-    //% block="$name"
-    //% blockId=dataserial_indexkeyshadow
-    //% blockHidden=true shim=TD_ID
-    //% name.fieldEditor="autocomplete" name.fieldOptions.decompileLiterals=true
-    //% name.fieldOptions.key="dataserialindexkey"
+    //%block="$name"
+    //%blockId=dataserial_indexkeyshadow
+    //%blockHidden=true shim=TD_ID
+    //%name.fieldEditor="autocomplete" name.fieldOptions.decompileLiterals=true
+    //%name.fieldOptions.key="dataserialindexkey"
     export function _imageArrayNameShadow(name: string) {
         return name
     }
@@ -54,7 +55,7 @@ namespace dataserial {
     //%name.shadow="dataserial_indexkeyshadow" name.defl="myIdxKey"
     //%group="write and read"
     //%weight=5
-    export function read(txt:string,name:number) {
+    export function read(txt:string,name:string) {
         if (cidk[name] == null) return "";
         let idx = cidk[name]
         let oval = "", curc = ""
