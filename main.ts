@@ -11,7 +11,7 @@ namespace dataserial {
     //%blockHidden=true shim=TD_ID
     //%name.fieldEditor="autocomplete" name.fieldOptions.decompileLiterals=true
     //%name.fieldOptions.key="dataserialindexkey"
-    export function _imageArrayNameShadow(name: string) {
+    export function _indexKeyShadow(name: string) {
         return name
     }
 
