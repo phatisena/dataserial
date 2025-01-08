@@ -76,7 +76,7 @@ namespace dataserial {
 
     //%blockid=dataserial_saveimage
     //%block="save image $InputImg=screen_image_picker to string data"
-    //%group="image data"
+    //%group="image serial"
     //%weight=10
     export function saveImg(InputImg: Image) {
         let OutputStr = ""
@@ -100,7 +100,7 @@ namespace dataserial {
 
     //%blockid=dataserial_loadimage
     //%block="load image $DataStr from string data"
-    //%group="image data"
+    //%group="image serial"
     //%weight=5
     export function loadImg(DataStr: string) {
         if (DataStr.isEmpty()) return undefined;
