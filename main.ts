@@ -84,23 +84,17 @@ namespace dataserial {
         OutputStr = "" + OutputStr + write("img.1")
         OutputStr = "" + OutputStr + write(convertToText(InputImg.width))
         OutputStr = "" + OutputStr + write(convertToText(InputImg.height))
-        let NumVal = InputImg.getPixel(0, 0)
-        let Count = 1, Ix = 0, Iy = 0
+        let NumVal = InputImg.getPixel(0, 0), Count = 1, Ix = 0, Iy = 0
         for (let  index = 0; index <= InputImg.width * InputImg.height - 2; index++) {
-            Ix = (index + 1) % InputImg.width
-            Iy = Math.floor((index + 1) / InputImg.width)
+            Ix = (index + 1) % InputImg.width, Iy = Math.floor((index + 1) / InputImg.width)
             if (NumVal == InputImg.getPixel(Ix, Iy)) {
                 Count += 1
             } else {
-                OutputStr = "" + OutputStr + write(convertToText(Count))
-                OutputStr = "" + OutputStr + write(convertToText(NumVal))
-                NumVal = InputImg.getPixel(Ix, Iy)
-                Count = 1
+                OutputStr = "" + OutputStr + write(convertToText(Count)), OutputStr = "" + OutputStr + write(convertToText(NumVal))
+                NumVal = InputImg.getPixel(Ix, Iy), Count = 1
             }
         }
-        OutputStr = "" + OutputStr + write(convertToText(Count))
-        OutputStr = "" + OutputStr + write(convertToText(NumVal))
-        OutputStr = "" + OutputStr + write("ENDimg")
+        OutputStr = "" + OutputStr + write(convertToText(Count)), OutputStr = "" + OutputStr + write(convertToText(NumVal)), OutputStr = "" + OutputStr + write("ENDimg")
         return OutputStr
     }
 
@@ -109,22 +103,16 @@ namespace dataserial {
     //%group="image data"
     //%weight=5
     export function loadImg(DataStr: string) {
+        if (DataStr.isEmpty()) return undefined;
         startIdxKey("_ImgData", 0)
         let StrVal = read(DataStr, "_ImgData")
         let NumVal = 0, Ix = 0, Iy = 0
-        if (!(StrVal.includes("image"))) {
-            return undefined
-        }
+        if (!(StrVal.includes("image"))) return undefined;
         StrVal = read(DataStr, "_ImgData")
-        if (!(StrVal.includes("img."))) {
-            return undefined
-        }
-        let Widt = parseFloat(read(DataStr, "_ImgData"))
-        let Heig = parseFloat(read(DataStr, "_ImgData"))
+        if (!(StrVal.includes("img."))) return undefined;
+        let Widt = parseFloat(read(DataStr, "_ImgData")), Heig = parseFloat(read(DataStr, "_ImgData"))
         let OutputImg = image.create(Widt, Heig)
-        let I = 0
-        let CountStr = read(DataStr, "_ImgData")
-        let Count = parseFloat(CountStr)
+        let I = 0, CountStr = read(DataStr, "_ImgData"), Count = parseFloat(CountStr)
         while (getIdxKey("_ImgData") < DataStr.length) {
             Ix = I % Widt
             Iy = Math.floor(I / Widt)
@@ -136,9 +124,7 @@ namespace dataserial {
                 Iy = Math.floor(I / Widt)
             }
             CountStr = read(DataStr, "_ImgData")
-            if (CountStr.includes("END")) {
-                break;
-            }
+            if (CountStr.includes("END")) break;
             Count = parseFloat(CountStr)
         }
         return OutputImg
