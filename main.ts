@@ -73,4 +73,74 @@ namespace dataserial {
         idx += 1, cidk[name] = idx
         return oval
     }
+
+    //%blockid=dataserial_saveimage
+    //%block="save image $InputImg=screen_image_picker to string data"
+    //%group="image data"
+    //%weight=10
+    export function saveImg(InputImg: Image) {
+        let OutputStr = ""
+        OutputStr = "" + OutputStr + write("image")
+        OutputStr = "" + OutputStr + write("img.1")
+        OutputStr = "" + OutputStr + write(convertToText(InputImg.width))
+        OutputStr = "" + OutputStr + write(convertToText(InputImg.height))
+        let NumVal = InputImg.getPixel(0, 0)
+        let Count = 1, Ix = 0, Iy = 0
+        for (let  index = 0; index <= InputImg.width * InputImg.height - 2; index++) {
+            Ix = (index + 1) % InputImg.width
+            Iy = Math.floor((index + 1) / InputImg.width)
+            if (NumVal == InputImg.getPixel(Ix, Iy)) {
+                Count += 1
+            } else {
+                OutputStr = "" + OutputStr + write(convertToText(Count))
+                OutputStr = "" + OutputStr + write(convertToText(NumVal))
+                NumVal = InputImg.getPixel(Ix, Iy)
+                Count = 1
+            }
+        }
+        OutputStr = "" + OutputStr + write(convertToText(Count))
+        OutputStr = "" + OutputStr + write(convertToText(NumVal))
+        OutputStr = "" + OutputStr + write("ENDimg")
+        return OutputStr
+    }
+
+    //%blockid=dataserial_loadimage
+    //%block="load image $DataStr from string data"
+    //%group="image data"
+    //%weight=5
+    export function loadImg(DataStr: string) {
+        startIdxKey("_ImgData", 0)
+        let StrVal = read(DataStr, "_ImgData")
+        let NumVal = 0, Ix = 0, Iy = 0
+        if (!(StrVal.includes("image"))) {
+            return undefined
+        }
+        StrVal = read(DataStr, "_ImgData")
+        if (!(StrVal.includes("img."))) {
+            return undefined
+        }
+        let Widt = parseFloat(read(DataStr, "_ImgData"))
+        let Heig = parseFloat(read(DataStr, "_ImgData"))
+        let OutputImg = image.create(Widt, Heig)
+        let I = 0
+        let CountStr = read(DataStr, "_ImgData")
+        let Count = parseFloat(CountStr)
+        while (getIdxKey("_ImgData") < DataStr.length) {
+            Ix = I % Widt
+            Iy = Math.floor(I / Widt)
+            NumVal = parseFloat(read(DataStr, "_ImgData"))
+            for (let index = 0; index < Count; index++) {
+                OutputImg.setPixel(Ix, Iy, NumVal)
+                I += 1
+                Ix = I % Widt
+                Iy = Math.floor(I / Widt)
+            }
+            CountStr = read(DataStr, "_ImgData")
+            if (CountStr.includes("END")) {
+                break;
+            }
+            Count = parseFloat(CountStr)
+        }
+        return OutputImg
+    }
 }
