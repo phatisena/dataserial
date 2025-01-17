@@ -110,13 +110,13 @@ namespace dataserial {
         if (!(StrVal.includes("image"))) return undefined;
         StrVal = read(DataStr, "_ImgData")
         if (!(StrVal.includes("img."))) return undefined;
-        let Widt = parseFloat(read(DataStr, "_ImgData")), Heig = parseFloat(read(DataStr, "_ImgData"))
+        let Widt = parseInt(read(DataStr, "_ImgData")), Heig = parseInt(read(DataStr, "_ImgData"))
         let OutputImg = image.create(Widt, Heig)
-        let I = 0, CountStr = read(DataStr, "_ImgData"), Count = parseFloat(CountStr)
+        let I = 0, CountStr = read(DataStr, "_ImgData"), Count = parseInt(CountStr)
         while (getIdxKey("_ImgData") < DataStr.length) {
             Ix = I % Widt
             Iy = Math.floor(I / Widt)
-            NumVal = parseFloat(read(DataStr, "_ImgData"))
+            NumVal = parseInt(read(DataStr, "_ImgData"))
             for (let index = 0; index < Count; index++) {
                 OutputImg.setPixel(Ix, Iy, NumVal)
                 I += 1
@@ -125,8 +125,90 @@ namespace dataserial {
             }
             CountStr = read(DataStr, "_ImgData")
             if (CountStr.includes("END")) break;
-            Count = parseFloat(CountStr)
+            Count = parseInt(CountStr)
         }
         return OutputImg
+    }
+
+    //%blockid=dataserial_saveimagearray
+    //%block="save image array $InputImgArr to string data"
+    //%InputImgArr.shadow=lists_create_with InputImgArr.defl=screen_image_picker
+    //%group="image serial array"
+    //%weight=10
+    export function saveImgArray(InputImgArr: Image[]) {
+        let OutputStr = ""
+        OutputStr = "" + OutputStr + write("imagearr")
+        OutputStr = "" + OutputStr + write("imgarr.1")
+        let I = 0, NumVal = 0, Count = 0, Ix = 0, Iy = 0
+        for (let value of InputImgArr) {
+            OutputStr = "" + OutputStr + write(convertToText(value.width))
+            OutputStr = "" + OutputStr + write(convertToText(value.height))
+            NumVal = value.getPixel(0, 0)
+            Count = 1
+            for (let index = 0; index <= value.width * value.height - 2; index++) {
+                Ix = (index + 1) % value.width
+                Iy = Math.floor((index + 1) / value.width)
+                if (NumVal == value.getPixel(Ix, Iy)) {
+                    Count += 1
+                } else {
+                    OutputStr = "" + OutputStr + write(convertToText(Count))
+                    OutputStr = "" + OutputStr + write(convertToText(NumVal))
+                    NumVal = value.getPixel(Ix, Iy)
+                    Count = 1
+                }
+            }
+            OutputStr = "" + OutputStr + write(convertToText(Count))
+            OutputStr = "" + OutputStr + write(convertToText(NumVal))
+            if (I < InputImgArr.length - 1) {
+                OutputStr = "" + OutputStr + write("NEXTimgarr")
+            }
+            I += 1
+        }
+        OutputStr = "" + OutputStr + write("ENDimgarr")
+        return OutputStr
+    }
+
+    //%blockid=dataserial_loadimagearray
+    //%block="load image array $DataStr from string data"
+    //%group="image serial array"
+    //%weight=5
+    export function loadImgArray(DataStr: string) {
+        startIdxKey("ImgData", 0)
+        let StrVal = read(DataStr, "ImgData")
+        if (!(StrVal.includes("imagearr"))) {
+            return []
+        }
+        StrVal = read(DataStr, "ImgData")
+        if (!(StrVal.includes("imgarr."))) {
+            return []
+        }
+        let OutputImgArr: Image[] = []
+        let Widt = parseInt(read(DataStr, "ImgData")), Heig = parseInt(read(DataStr, "ImgData"))
+        let OutputImg = image.create(Widt, Heig)
+        let I = 0, Ix = 0, Iy = 0, NumVal = 0, CountStr = read(DataStr, "ImgData"), Count = parseInt(CountStr)
+        while (getIdxKey("ImgData") < DataStr.length) {
+            Ix = I % Widt
+            Iy = Math.floor(I / Widt)
+            NumVal = parseInt(read(DataStr, "ImgData"))
+            for (let index = 0; index < Count; index++) {
+                OutputImg.setPixel(Ix, Iy, NumVal)
+                I += 1
+                Ix = I % Widt
+                Iy = Math.floor(I / Widt)
+            }
+            CountStr = read(DataStr, "ImgData")
+            if (CountStr.includes("END")) {
+                break;
+            } else if (CountStr.includes("NEXT")) {
+                OutputImgArr.push(OutputImg.clone())
+                Widt = parseInt(read(DataStr, "ImgData"))
+                Heig = parseInt(read(DataStr, "ImgData"))
+                CountStr = read(DataStr, "ImgData")
+                I = 0
+                OutputImg = image.create(Widt, Heig)
+            }
+            Count = parseInt(CountStr)
+        }
+        return OutputImgArr
     }
 }
