@@ -175,13 +175,9 @@ namespace dataserial {
     export function loadImgArray(DataStr: string) {
         startIdxKey("ImgData", 0)
         let StrVal = read(DataStr, "ImgData")
-        if (!(StrVal.includes("imagearr"))) {
-            return []
-        }
+        if (!(StrVal.includes("imagearr"))) return [];
         StrVal = read(DataStr, "ImgData")
-        if (!(StrVal.includes("imgarr."))) {
-            return []
-        }
+        if (!(StrVal.includes("imgarr."))) return [];
         let OutputImgArr: Image[] = []
         let Widt = parseInt(read(DataStr, "ImgData")), Heig = parseInt(read(DataStr, "ImgData"))
         let OutputImg = image.create(Widt, Heig)
