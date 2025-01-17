@@ -16,7 +16,7 @@ namespace dataserial {
     }
 
     //%blockid=dataserial_startindexkey
-    //%block="start read in $name by $start"
+    //%block="set index in $name by $start"
     //%name.shadow="dataserial_indexkeyshadow" name.defl="myIdxKey"
     //%group="index key"
     //%weight=10
