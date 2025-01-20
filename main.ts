@@ -74,6 +74,31 @@ namespace dataserial {
         return oval
     }
 
+    //%blockid=dataserial_savestrarray
+    //%block="save string array $inputStrArr"
+    //%group="array in string"
+    //%weight=10
+    export function saveStrArr(inputStrArr:string[]) {
+        let outputStr = ""
+        for (let val of inputStrArr) {
+            outputStr = "" + outputStr + write(val)
+        }
+        return outputStr
+    }
+
+    //%blockid=dataserial_loadstrarray
+    //%block="load string array $inputStr"
+    //%group="array in string"
+    //%weight=5
+    export function loadStrArr(inputStr:string) {
+        let outputStrArr: string[] = []
+        setIdxKey("_StrArrData",0)
+        while (getIdxKey("_StrArrData") < inputStr.length) {
+            outputStrArr.push(read(inputStr,"_StrArrData"))
+        }
+        return outputStrArr
+    }
+
     //%blockid=dataserial_saveimage
     //%block="save image $InputImg=screen_image_picker to string data"
     //%group="image serial"
@@ -128,23 +153,6 @@ namespace dataserial {
             Count = parseInt(CountStr)
         }
         return OutputImg
-    }
-
-    export function saveStrArr(inputStrArr:string[]) {
-        let outputStr = ""
-        for (let val of inputStrArr) {
-            outputStr = "" + outputStr + write(val)
-        }
-        return outputStr
-    }
-
-    export function loadStrArr(inputStr:string) {
-        let outputStrArr: string[] = []
-        setIdxKey("_StrArrData",0)
-        while (getIdxKey("_StrArrData") < inputStr.length) {
-            outputStrArr.push(read(inputStr,"_StrArrData"))
-        }
-        return outputStrArr
     }
 
     //%blockid=dataserial_saveimagearray
