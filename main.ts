@@ -16,12 +16,12 @@ namespace dataserial {
     }
 
     //%blockid=dataserial_startindexkey
-    //%block="set index in $name by $start"
+    //%block="set index in $name by $num"
     //%name.shadow="dataserial_indexkeyshadow" name.defl="myIdxKey"
     //%group="index key"
     //%weight=10
-    export function startIdxKey(name:string,start:number) {
-        cidk[name] = start
+    export function setIdxKey(name:string,num:number) {
+        cidk[name] = num
     }
 
     //%blockid=dataserial_getindexkey
@@ -104,7 +104,7 @@ namespace dataserial {
     //%weight=5
     export function loadImg(DataStr: string) {
         if (DataStr.isEmpty()) return undefined;
-        startIdxKey("_ImgData", 0)
+        setIdxKey("_ImgData", 0)
         let StrVal = read(DataStr, "_ImgData")
         let NumVal = 0, Ix = 0, Iy = 0
         if (!(StrVal.includes("image"))) return undefined;
@@ -128,6 +128,23 @@ namespace dataserial {
             Count = parseInt(CountStr)
         }
         return OutputImg
+    }
+
+    export function saveStrArr(inputStrArr:string[]) {
+        let outputStr = ""
+        for (let val of inputStrArr) {
+            outputStr = "" + outputStr + write(val)
+        }
+        return outputStr
+    }
+
+    export function loadStrArr(inputStr:string) {
+        let outputStrArr: string[] = []
+        setIdxKey("_StrArrData",0)
+        while (getIdxKey("_StrArrData") < inputStr.length) {
+            outputStrArr.push(read(inputStr,"_StrArrData"))
+        }
+        return outputStrArr
     }
 
     //%blockid=dataserial_saveimagearray
@@ -173,7 +190,7 @@ namespace dataserial {
     //%group="image serial array"
     //%weight=5
     export function loadImgArray(DataStr: string) {
-        startIdxKey("ImgData", 0)
+        setIdxKey("ImgData", 0)
         let StrVal = read(DataStr, "ImgData")
         if (!(StrVal.includes("imagearr"))) return [];
         StrVal = read(DataStr, "ImgData")
