@@ -75,7 +75,7 @@ namespace dataserial {
     }
 
     function checkStrf2e(txt:string,fchr:string,lchr:string) {
-        if (txt.substr(0, fchr.length) === fchr && txt.substr(Math.abs(txt.length - fchr.length), fchr.length) === fchr) return true;
+        if (txt.substr(0, fchr.length) === fchr && txt.substr(Math.abs(txt.length - lchr.length), lchr.length) === lchr) return true;
         return false;
     }
 
