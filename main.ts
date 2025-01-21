@@ -95,9 +95,9 @@ namespace dataserial {
                 if (cval == val) {
                     count += 1
                 } else {
-                    cval = val
                     outputStr = "" + outputStr + write(count.toString())
                     outputStr = "" + outputStr + write(cval)
+                    cval = val
                     count = 1
                 }
             }
