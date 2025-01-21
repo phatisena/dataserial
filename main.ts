@@ -89,14 +89,17 @@ namespace dataserial {
         let cval = ""
         let count = 1
         for (let val of inputStrArr) {
-            if (cval.isEmpty()) cval = val;
-            if (cval != val) {
+            if (cval.isEmpty()) {
                 cval = val
-                outputStr = "" + outputStr + write(count.toString())
-                outputStr = "" + outputStr + write(cval)
-                count = 1
             } else {
-                count += 1
+                if (cval == val) {
+                    count += 1
+                } else {
+                    cval = val
+                    outputStr = "" + outputStr + write(count.toString())
+                    outputStr = "" + outputStr + write(cval)
+                    count = 1
+                }
             }
         }
         outputStr = "" + outputStr + write(count.toString())
