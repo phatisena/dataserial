@@ -74,15 +74,34 @@ namespace dataserial {
         return oval
     }
 
+    function checkStrf2e(txt:string,fchr:string,lchr:string) {
+        if (txt.substr(0, fchr.length) === fchr && txt.substr(Math.abs(txt.length - fchr.length), fchr.length) === fchr) return true;
+        return false;
+    }
+
     //%blockid=dataserial_savestrarray
     //%block="save string array $inputStrArr"
     //%group="array in string"
     //%weight=10
     export function saveStrArr(inputStrArr:string[]) {
         let outputStr = ""
+        outputStr = "" + outputStr + write("[str>")
+        let cval = ""
+        let count = 1
         for (let val of inputStrArr) {
-            outputStr = "" + outputStr + write(val)
+            if (cval.isEmpty()) cval = val;
+            if (cval != val) {
+                cval = val
+                outputStr = "" + outputStr + write(count.toString())
+                outputStr = "" + outputStr + write(cval)
+                count = 1
+            } else {
+                count += 1
+            }
         }
+        outputStr = "" + outputStr + write(count.toString())
+        outputStr = "" + outputStr + write(cval)
+        outputStr = "" + outputStr + write(">str]")
         return outputStr
     }
 
@@ -93,8 +112,20 @@ namespace dataserial {
     export function loadStrArr(inputStr:string) {
         let outputStrArr: string[] = []
         setIdxKey("_StrArrData",0)
+        let val = read(inputStr, "_StrArrData")
+        if (!(checkStrf2e(val,"[",">"))) return [];
+        let count = 0, countstr = ""
         while (getIdxKey("_StrArrData") < inputStr.length) {
-            outputStrArr.push(read(inputStr,"_StrArrData"))
+            if (count <= 0) {
+                countstr = read(inputStr, "_StrArrData")
+                if (checkStrf2e(val, ">", "]")) break;
+                count = parseInt(countstr)
+                val = read(inputStr, "_StrArrData")
+            }
+            while (count > 0) {
+                count -= 1
+                outputStrArr.push(val)
+            }
         }
         return outputStrArr
     }
