@@ -142,7 +142,7 @@ namespace dataserial {
         let outputStr = ""
         outputStr = "" + outputStr + write("[str<")
         let cval = ""
-        let count = 1
+        let count = 1, nv = 0
         for (let n = 0; n < inputStrArr.length; n++) {
             for (let val of inputStrArr[n]) {
                 if (cval.isEmpty()) {
@@ -150,7 +150,7 @@ namespace dataserial {
                 } else {
                     if (cval == val) {
                         count += 1
-                    } else {
+                    } else if (n !== nv) { nv = n; count = 1; cval = val} else {
                         outputStr = "" + outputStr + write(count.toString())
                         outputStr = "" + outputStr + write(cval)
                         cval = val
