@@ -85,7 +85,7 @@ namespace dataserial {
     //%weight=10
     export function saveStrArr(inputStrArr:string[]) {
         let outputStr = ""
-        outputStr = "" + outputStr + write("[str>")
+        outputStr = "" + outputStr + write("[str<")
         let cval = ""
         let count = 1
         for (let val of inputStrArr) {
@@ -116,7 +116,7 @@ namespace dataserial {
         let outputStrArr: string[] = []
         setIdxKey("_StrArrData",0)
         let val = read(inputStr, "_StrArrData")
-        if (!(checkStrf2e(val,"[",">"))) return [];
+        if (!(checkStrf2e(val,"[","<"))) return [];
         let count = 0, countstr = ""
         while (getIdxKey("_StrArrData") < inputStr.length) {
             if (count <= 0) {
@@ -128,6 +128,69 @@ namespace dataserial {
             while (count > 0) {
                 count -= 1
                 outputStrArr.push(val)
+            }
+        }
+        return outputStrArr
+    }
+
+    //%blockid=dataserial_savestrtablearray
+    //%block="save string table array $inputStrArr"
+    //%inputStrArr.shadow=variables_get inputStrArr.defl=StringTableArray
+    //%group="array in string"
+    //%weight=10
+    export function saveStrTableArr(inputStrArr: string[][]) {
+        let outputStr = ""
+        outputStr = "" + outputStr + write("[str<")
+        let cval = ""
+        let count = 1
+        for (let n = 0; n < inputStrArr.length; n++) {
+            for (let val of inputStrArr[n]) {
+                if (cval.isEmpty()) {
+                    cval = val
+                } else {
+                    if (cval == val) {
+                        count += 1
+                    } else {
+                        outputStr = "" + outputStr + write(count.toString())
+                        outputStr = "" + outputStr + write(cval)
+                        cval = val
+                        count = 1
+                    }
+                }
+            }
+            outputStr = "" + outputStr + write(count.toString())
+            outputStr = "" + outputStr + write(cval)
+            if (n < inputStrArr.length-1) outputStr = "" + outputStr + write(">]str[<");
+        }
+        outputStr = "" + outputStr + write(">str]")
+        return outputStr
+    }
+
+    //%blockid=dataserial_loadstrarray
+    //%block="load string table array $inputStr"
+    //%group="array in string"
+    //%weight=5
+    export function loadStrTableArr(inputStr: string) {
+        let outputStrArr: string[][] = []
+        setIdxKey("_StrArrData", 0)
+        let val = read(inputStr, "_StrArrData")
+        if (!(checkStrf2e(val, "[", "<"))) return [];
+        outputStrArr.push([])
+        let count = 0, countstr = "", cidx = outputStrArr.length-1
+        while (getIdxKey("_StrArrData") < inputStr.length) {
+            if (count <= 0) {
+                countstr = read(inputStr, "_StrArrData")
+                if (checkStrf2e(val, ">]", "[<")) {
+                    outputStrArr.push([])
+                    cidx = outputStrArr.length - 1
+                }
+                if (checkStrf2e(val, ">", "]")) break;
+                count = parseInt(countstr)
+                val = read(inputStr, "_StrArrData")
+            }
+            while (count > 0) {
+                count -= 1
+                outputStrArr[cidx].push(val)
             }
         }
         return outputStrArr
