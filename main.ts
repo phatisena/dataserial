@@ -121,7 +121,7 @@ namespace dataserial {
         while (getIdxKey("_StrArrData") < inputStr.length) {
             if (count <= 0) {
                 countstr = read(inputStr, "_StrArrData")
-                if (checkStrf2e(val, ">", "]")) break;
+                if (checkStrf2e(countstr, ">", "]")) break;
                 count = parseInt(countstr)
                 val = read(inputStr, "_StrArrData")
             }
@@ -180,13 +180,13 @@ namespace dataserial {
         while (getIdxKey("_StrArrData") < inputStr.length) {
             if (count <= 0) {
                 countstr = read(inputStr, "_StrArrData")
-                if (checkStrf2e(val, ">]", "[<")) {
+                if (checkStrf2e(countstr, ">]", "[<")) {
                     outputStrArr.push([])
                     cidx = outputStrArr.length - 1
+                } else if (checkStrf2e(countstr, ">", "]")) { break; } else {
+                    count = parseInt(countstr)
+                    val = read(inputStr, "_StrArrData")
                 }
-                if (checkStrf2e(val, ">", "]")) break;
-                count = parseInt(countstr)
-                val = read(inputStr, "_StrArrData")
             }
             while (count > 0) {
                 count -= 1
