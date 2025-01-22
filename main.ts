@@ -111,7 +111,7 @@ namespace dataserial {
     //%blockid=dataserial_loadstrarray
     //%block="load string array $inputStr"
     //%group="array in string"
-    //%weight=5
+    //%weight=8
     export function loadStrArr(inputStr:string) {
         let outputStrArr: string[] = []
         setIdxKey("_StrArrData",0)
@@ -137,7 +137,7 @@ namespace dataserial {
     //%block="save string table array $inputStrArr"
     //%inputStrArr.shadow=variables_get inputStrArr.defl=StringTableArray
     //%group="array in string"
-    //%weight=10
+    //%weight=6
     export function saveStrTableArr(inputStrArr: string[][]) {
         let outputStr = ""
         outputStr = "" + outputStr + write("[str<")
@@ -169,7 +169,7 @@ namespace dataserial {
     //%blockid=dataserial_loadstrarray
     //%block="load string table array $inputStr"
     //%group="array in string"
-    //%weight=5
+    //%weight=4
     export function loadStrTableArr(inputStr: string) {
         let outputStrArr: string[][] = []
         setIdxKey("_StrArrData", 0)
