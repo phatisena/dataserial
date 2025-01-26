@@ -14,6 +14,10 @@
     "testFiles": [
         "test.ts"
     ],
+    "targetVersions": {
+        "target": ["1.12.58","7.0,4"]
+        "targetId": ["arcade","microbit"]
+    },
     "supportedTargets": [
         "arcade",
         "microbit"
