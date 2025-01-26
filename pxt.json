@@ -1,7 +1,7 @@
 {
     "name": "dataserial",
     "version": "3.2.0",
-    "description": "",
+    "description": "data serialisation for makecode",
     "dependencies": {
         "device": "*"
     },
@@ -15,8 +15,8 @@
         "test.ts"
     ],
     "targetVersions": {
-        "target": ["1.12.58","7.0,4"]
-        "targetId": ["arcade","microbit"]
+        "target": ""
+        "targetId": ""
     },
     "supportedTargets": [
         "arcade",
